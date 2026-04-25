@@ -1,5 +1,6 @@
-
-    <h1>⚔️ TRUST OS ⚔️</h1>
+<div align="center">
+    
+ <h1>⚔️ TRUST OS ⚔️</h1>
   <h3><strong>The Ultimate Forensic Truth Engine</strong></h3>
 
   <p align="center">
