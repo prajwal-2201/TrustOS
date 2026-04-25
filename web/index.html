@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trust OS | AI Truth Detector</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/style.css">
+    <meta name="description" content="AI-powered detector for scams, AI generated images, and manipulated screenshots.">
+</head>
+<body>
+    <div class="background-gradient"></div>
+    <div class="background-glow"></div>
+
+    <header>
+        <div class="header-container">
+            <h1 class="logo">Trust<span>OS</span></h1>
+            <nav>
+                <button class="nav-btn active" id="nav-scanner">Scanner</button>
+                <button class="nav-btn" id="nav-history">History</button>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- SCANNER SECTION -->
+        <section id="scanner-section" class="active-section">
+            <div class="hero-text">
+                <h2>Detect Deception Instantly</h2>
+                <p>Upload screenshots, messages, or images to detect scams, AI generation, and manipulation.</p>
+            </div>
+
+            <div class="upload-container" id="drop-zone">
+                <input type="file" id="file-input" accept="image/*" hidden>
+                <div class="upload-content">
+                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+                    <h3>Drag & Drop to Scan</h3>
+                    <p>or click to browse your files</p>
+                </div>
+            </div>
+
+            <div class="demos-section">
+                <h4>Try a Demo Scenario</h4>
+                <div class="demo-pills">
+                    <button class="demo-pill" data-type="Payment Screenshot">Payment Scam</button>
+                    <button class="demo-pill" data-type="WhatsApp Message">WhatsApp Scam</button>
+                    <button class="demo-pill" data-type="Offer Letter">Fake Job Offer</button>
+                    <button class="demo-pill" data-type="QR Code">Malicious QR</button>
+                    <button class="demo-pill" data-type="Edited Payment">Edited Screenshot</button>
+                    <button class="demo-pill" data-type="AI Face">AI Generated Face</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCANNING OVERLAY -->
+        <div id="scanning-overlay" class="hidden">
+            <div class="scanner-ui">
+                <div class="scan-ring"></div>
+                <div class="scan-text">Analyzing Content...</div>
+                <div class="scan-progress">
+                    <div class="scan-bar" id="scan-bar"></div>
+                </div>
+                <div class="scan-steps" id="scan-steps">Extracting metadata...</div>
+            </div>
+        </div>
+
+        <!-- RESULTS SECTION -->
+        <section id="results-section" class="hidden glass-panel">
+            <div class="result-header">
+                <h2>Analysis Complete</h2>
+                <button class="btn-secondary" id="btn-new-scan">New Scan</button>
+            </div>
+            
+            <div class="result-grid">
+                <div class="result-main">
+                    <div class="score-card">
+                        <div class="risk-circle">
+                            <span id="res-score">--</span>
+                            <small>Risk Score</small>
+                            <svg class="progress-ring" height="120" width="120">
+                              <circle class="progress-ring__circle" stroke-width="8" fill="transparent" r="52" cx="60" cy="60" />
+                            </svg>
+                        </div>
+                        <div class="badge-container">
+                            <span id="res-badge" class="badge">Processing</span>
+                        </div>
+                        <div class="confidence">Confidence: <span id="res-conf">--%</span></div>
+                    </div>
+                </div>
+
+                <div class="result-details">
+                    <div class="info-group">
+                        <h3>Detection Type</h3>
+                        <p id="res-type" class="highlight-text">--</p>
+                    </div>
+                    
+                    <div class="info-group">
+                        <h3>Key Findings</h3>
+                        <ul id="res-reasons" class="reasons-list">
+                            <!-- reasons injected here -->
+                        </ul>
+                    </div>
+
+                    <div class="action-card" id="res-action-card">
+                        <svg class="action-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        <p id="res-action">--</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="extracted-text-box">
+                <h4>Extracted Text</h4>
+                <div id="res-text"></div>
+            </div>
+        </section>
+
+        <!-- HISTORY SECTION -->
+        <section id="history-section" class="hidden">
+            <div class="history-header">
+                <h2>Scan History</h2>
+                <button class="btn-icon" id="btn-refresh-history" title="Refresh">
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                </button>
+            </div>
+            <div class="history-grid" id="history-list">
+                <!-- Items injected here -->
+            </div>
+        </section>
+    </main>
+
+    <script src="/script.js"></script>
+</body>
+</html>
