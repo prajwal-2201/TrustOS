@@ -17,6 +17,7 @@
             <h1 class="logo">Trust<span>OS</span></h1>
             <nav>
                 <button class="nav-btn active" id="nav-scanner">Scanner</button>
+                <button class="nav-btn" id="nav-text">Text Scan</button>
                 <button class="nav-btn" id="nav-history">History</button>
             </nav>
         </div>
@@ -26,10 +27,11 @@
         <!-- SCANNER SECTION -->
         <section id="scanner-section" class="active-section">
             <div class="hero-text">
-                <h2>Detect Deception Instantly</h2>
+                <h2>Forensic Image Analysis</h2>
                 <p>Upload screenshots, messages, or images to detect scams, AI generation, and manipulation.</p>
             </div>
-
+            
+            <!-- (rest of drop-zone etc) -->
             <div class="upload-container" id="drop-zone">
                 <input type="file" id="file-input" accept="image/*" hidden>
                 <div class="upload-content">
@@ -52,6 +54,18 @@
             </div>
         </section>
 
+        <!-- TEXT SCANNER SECTION -->
+        <section id="text-section" class="hidden">
+            <div class="hero-text">
+                <h2>Instant Text Scanner</h2>
+                <p>Paste suspicious SMS, emails, or messages to detect scam probability using AI models.</p>
+            </div>
+            <div class="text-input-container glass-panel">
+                <textarea id="text-input-field" placeholder="Paste your message here... (e.g. 'Your account is blocked. Click here to verify...')"></textarea>
+                <button class="btn-primary" id="btn-scan-text">Analyze Text</button>
+            </div>
+        </section>
+
         <!-- SCANNING OVERLAY -->
         <div id="scanning-overlay" class="hidden">
             <div class="scanner-ui">
@@ -68,7 +82,12 @@
         <section id="results-section" class="hidden glass-panel">
             <div class="result-header">
                 <h2>Analysis Complete</h2>
-                <button class="btn-secondary" id="btn-new-scan">New Scan</button>
+                <div class="result-header-actions">
+                    <button class="btn-icon" id="btn-copy-report" title="Copy Report">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                    </button>
+                    <button class="btn-secondary" id="btn-new-scan">New Scan</button>
+                </div>
             </div>
             
             <div class="result-grid">
@@ -85,6 +104,22 @@
                             <span id="res-badge" class="badge">Processing</span>
                         </div>
                         <div class="confidence">Confidence: <span id="res-conf">--%</span></div>
+                    </div>
+                    
+                    <div class="forensic-summary" id="forensic-summary">
+                        <h4>Forensic Metrics</h4>
+                        <div class="metric-row">
+                            <span>ELA Score (Manipulation)</span>
+                            <span id="meta-ela">--</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>ML Scam Probability</span>
+                            <span id="meta-ml">--</span>
+                        </div>
+                        <div class="metric-row">
+                            <span>QR Links Found</span>
+                            <span id="meta-qr">--</span>
+                        </div>
                     </div>
                 </div>
 
@@ -109,7 +144,7 @@
             </div>
             
             <div class="extracted-text-box">
-                <h4>Extracted Text</h4>
+                <h4>Extracted Content</h4>
                 <div id="res-text"></div>
             </div>
         </section>

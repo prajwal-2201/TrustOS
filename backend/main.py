@@ -23,7 +23,10 @@ app.add_middleware(
 models.Base.metadata.create_all(bind=database.engine)
 
 
-# ─── UPLOAD & ANALYZE ─────────────────────────────────────────────────────────
+from pydantic import BaseModel
+
+class TextAnalysisRequest(BaseModel):
+    text: str
 
 @app.post("/upload")
 async def analyze_upload(
@@ -41,24 +44,58 @@ async def analyze_upload(
         confidence=result["confidence"],
         risk_score=result["risk_score"],
         reasons=json.dumps(result["reasons"]),
-        extracted_text=result["extracted_text"]
+        extracted_text=result["extracted_text"],
+        meta_data=json.dumps(result["meta_data"])
     )
     db.add(record)
     db.commit()
     db.refresh(record)
 
     return {
+        **result,
         "id": record.id,
-        "scan_type": record.scan_type,
-        "result_badge": record.result_badge,
-        "confidence": record.confidence,
-        "risk_score": record.risk_score,
-        "reasons": json.loads(record.reasons),
-        "extracted_text": record.extracted_text,
         "timestamp": record.timestamp,
         "suggested_action": (
             "Do NOT share personal info or proceed. This is high-risk."
             if record.risk_score < 50 else "Seems safe, but always verify manually."
+        )
+    }
+
+@app.post("/analyze-text")
+async def analyze_text(
+    request: TextAnalysisRequest,
+    db: Session = Depends(database.get_db)
+):
+    from analyzer import analyze_text_only
+    result = analyze_text_only(request.text)
+    
+    # We create a dummy badge for the text scan
+    badge = "Safe"
+    if result["risk_score"] < 40: badge = "Dangerous"
+    elif result["risk_score"] < 70: badge = "Suspicious"
+    
+    record = models.ScanHistory(
+        filename="text_input",
+        scan_type="Plain Text Scan",
+        result_badge=badge,
+        confidence=result["scam_probability"], # reuse field
+        risk_score=result["risk_score"],
+        reasons=json.dumps([f"ML Probability: {result['scam_probability']}%"]),
+        extracted_text=request.text[:1000],
+        meta_data=json.dumps({"ml_scam_prob": result["scam_probability"]})
+    )
+    db.add(record)
+    db.commit()
+    db.refresh(record)
+    
+    return {
+        "id": record.id,
+        "risk_score": result["risk_score"],
+        "scam_probability": result["scam_probability"],
+        "result_badge": badge,
+        "suggested_action": (
+            "Caution: This text shows strong scam markers."
+            if result["risk_score"] < 50 else "Text seems normal, but stay vigilant."
         )
     }
 
@@ -163,6 +200,12 @@ def run_demo(
         risk_score=scenario["risk_score"],
         reasons=json.dumps(scenario["reasons"]),
         extracted_text=scenario["extracted_text"],
+        meta_data=json.dumps({
+            "ela_score": 0,
+            "ml_scam_prob": 100 - scenario["risk_score"],
+            "qr_links": [],
+            "edge_density": 0.05
+        })
     )
     db.add(record)
     db.commit()
@@ -177,6 +220,7 @@ def run_demo(
         "extracted_text": record.extracted_text,
         "timestamp": record.timestamp,
         "suggested_action": scenario["suggested_action"],
+        "meta_data": json.loads(record.meta_data)
     }
 
 
@@ -197,6 +241,7 @@ def get_history(db: Session = Depends(database.get_db)):
             "risk_score": r.risk_score,
             "reasons": json.loads(r.reasons) if r.reasons else [],
             "extracted_text": r.extracted_text,
+            "meta_data": json.loads(r.meta_data) if r.meta_data else {},
             "timestamp": r.timestamp,
             "suggested_action": (
                 "Do NOT share personal info or proceed. This is high-risk."

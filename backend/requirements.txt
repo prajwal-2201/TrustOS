@@ -4,8 +4,8 @@ python-multipart==0.0.6
 pytesseract==0.3.10
 opencv-python==4.8.1.78
 Pillow
-SQLAlchemy==2.0.21
+SQLAlchemy>=2.0.36
 scikit-learn
 pandas
 tensorflow
-numpy
+numpy<2

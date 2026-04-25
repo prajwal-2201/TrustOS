@@ -13,4 +13,5 @@ class ScanHistory(Base):
     risk_score = Column(Integer)
     reasons = Column(String(1000)) # JSON string or comma-separated
     extracted_text = Column(String(2000)) # Truncated text
+    meta_data = Column(String(1000)) # JSON string for forensic details
     timestamp = Column(DateTime, default=datetime.datetime.utcnow)
