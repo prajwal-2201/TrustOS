@@ -1,7 +1,5 @@
-<div align="center">
-  <img src="https://img.icons8.com/fluency/256/spy.png" alt="Trust OS Logo" width="120" />
-  
-  <h1>⚔️ TRUST OS ⚔️</h1>
+
+    <h1>⚔️ TRUST OS ⚔️</h1>
   <h3><strong>The Ultimate Forensic Truth Engine</strong></h3>
 
   <p align="center">
